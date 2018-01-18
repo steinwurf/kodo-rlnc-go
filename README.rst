@@ -11,3 +11,5 @@ Run the following commands to install the kodo-rlnc-go bindings::
     ./waf configure
     ./waf --install_static_libs --install_path $GOPATH/src/github.com/steinwurf/kodo-rlnc-c
     go get github.com/steinwurf/kodo-rlnc-go
+    go install github.com/steinwurf/kodo-rlnc-go/encode_decode_example
+    ./bin/encode_decode_example
