@@ -40,7 +40,7 @@ def build(bld):
         kodo_rlnc_src = bld.root.find_dir(kodo_rlnc_src)
         kodo_rlnc_c_h = kodo_rlnc_src.find_node('kodo_rlnc_c.h')
 
-        bld.install_files(install_path, [kodo_rlnc_c_h], relative_trick=True)
+        bld.install_files(install_path, [kodo_rlnc_c_h])
 
     # populate these two variables with the correct information from bld
     # includes = "/path/to/kodo_rlnc_c.h"
