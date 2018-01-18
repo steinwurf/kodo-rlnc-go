@@ -6,9 +6,9 @@ package kodorlnc
 // http://www.steinwurf.com/licensing
 
 /*
-#cgo CFLAGS: -I../kodo_rlnc_c
-#cgo LDFLAGS: -L../kodo_rlnc_c -lboost_system -lboost_chrono -lboost_timer -lboost_iostreams -lboost_filesystem -lcpuid -lboost_thread -lfifi -lkodo_rlnc -lkodo_core_nocode -lkodo_rlnc_c_static
-#include "kodo_rlnc_c.h"
+#cgo CFLAGS: -I../kodo-rlnc-c
+#cgo LDFLAGS: -L../kodo-rlnc-c -lkodo_rlnc_c_static -lkodo_rlnc -lfifi -lcpuid
+#include <kodo_rlnc_c.h>
 */
 import "C"
 
@@ -25,52 +25,55 @@ type EncoderFactory struct {
 //        encoders built using the returned factory
 // @return A new factory capable of building encoders using the
 //         selected parameters.
-func NewEncoderFactory(finiteField int32, symbols uint32, symbolSize uint32) EncoderFactory {
-	factory := EncoderFactory
+func NewEncoderFactory(
+	finiteField int32, symbols uint32, symbolSize uint32) *EncoderFactory {
+	factory := new(EncoderFactory)
 	factory.mFactory = C.kodo_rlnc_encoder_factory_construct(
-		finiteField, symbols, symbolSize)
+		C.int32_t(finiteField), C.uint32_t(symbols), C.uint32_t(symbolSize))
 	return factory
 }
 
-// EncoderFactoryDestruct deallocates and release the memory consumed by a factory
+// Destruct deallocates the memory consumed by a factory
 // @param factory The factory which should be deallocated
-func EncoderFactoryDestruct(factory *EncoderFactory) {
-	return C.kodo_rlnc_encoder_factory_destruct(factory.mFactory)
+func (factory *EncoderFactory) Destruct() {
+	C.kodo_rlnc_encoder_factory_destruct(factory.mFactory)
 }
 
-// EncoderFactorySymbols returns the number of symbols in a block
+// Symbols returns the number of symbols in a block
 // @param factory The factory to query
 // @return the number of symbols in a block
-func EncoderFactorySymbols(factory *EncoderFactory) uint32 {
+func (factory *EncoderFactory) Symbols() uint32 {
 	return uint32(C.kodo_rlnc_encoder_factory_symbols(factory.mFactory))
 }
 
-// EncoderFactorySymbolSize returns the symbol size in bytes
+// SymbolSize returns the symbol size in bytes
 // @param factory The factory to query
 // @return the symbol size in bytes
-func EncoderFactorySymbolSize(factory *EncoderFactory) uint32 {
-	return uint32(C.kodo_rlnc_encoder_factory_symbolSize(factory.mFactory))
+func (factory *EncoderFactory) SymbolSize() uint32 {
+	return uint32(C.kodo_rlnc_encoder_factory_symbol_size(factory.mFactory))
 }
 
-// EncoderFactorySetSymbols sets the number of symbols
+// SetSymbols sets the number of symbols
 // @param factory The factory which should be configured
 // @param symbols the number of symbols
-func EncoderFactorySetSymbols(factory *EncoderFactory, symbols uint32) {
-	C.kodo_rlnc_encoder_factory_set_symbols(factory.mFactory, symbols)
+func (factory *EncoderFactory) SetSymbols(symbols uint32) {
+	C.kodo_rlnc_encoder_factory_set_symbols(
+		factory.mFactory, C.uint32_t(symbols))
 }
 
-// EncoderFactorySetSymbolSize sets the symbol size
+// SetSymbolSize sets the symbol size
 // @param factory The factory which should be configured
 // @param the symbol size in bytes
-func EncoderFactorySetSymbolSize(factory *EncoderFactory, symbolSize uint32) {
-	C.kodo_rlnc_encoder_factory_set_symbolSize(factory.mFactory, symbolSize)
+func (factory *EncoderFactory) SetSymbolSize(symbolSize uint32) {
+	C.kodo_rlnc_encoder_factory_set_symbol_size(
+		factory.mFactory, C.uint32_t(symbolSize))
 }
 
-// EncoderFactoryBuild builds the actual encoder
+// Build builds the actual encoder
 // @param factory The encoder factory which should be used to build the encoder
 // @return pointer to an instantiation of an encoder
-func EncoderFactoryBuild(factory *EncoderFactory) *Encoder {
+func (factory *EncoderFactory) Build() *Encoder {
 	encoder := new(Encoder)
-	encoder.m_encoder = C.kodo_rlnc_encoder_factory_build(factory.mFactory)
+	encoder.mEncoder = C.kodo_rlnc_encoder_factory_build(factory.mFactory)
 	return encoder
 }
