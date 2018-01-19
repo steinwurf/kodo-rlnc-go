@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
-
-	kodorlnc "github.com/steinwurf/kodo-rlnc-go"
 )
 
 // ExampleEncodeDecodeSimple is a simple example of using kodorlnc
@@ -18,10 +16,8 @@ func ExampleEncodeDecodeSimple() {
 	var symbols, symbolSize uint32 = 10, 100
 
 	// Initialization of encoder and decoder
-	encoderFactory := kodorlnc.NewEncoderFactory(
-		kodorlnc.Binary8, symbols, symbolSize)
-	decoderFactory := kodorlnc.NewDecoderFactory(
-		kodorlnc.Binary8, symbols, symbolSize)
+	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
+	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
 
 	// These lines show the API to clean the memory used by the factories
 	defer encoderFactory.Destruct()
