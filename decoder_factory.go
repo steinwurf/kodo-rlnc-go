@@ -11,6 +11,9 @@ package kodorlnc
 #include <kodo_rlnc_c.h>
 */
 import "C"
+import (
+	"runtime"
+)
 
 // DecoderFactory builds Decoders
 type DecoderFactory struct {
@@ -30,12 +33,13 @@ func NewDecoderFactory(
 	factory := new(DecoderFactory)
 	factory.mFactory = C.kodo_rlnc_decoder_factory_construct(
 		C.int32_t(finiteField), C.uint32_t(symbols), C.uint32_t(symbolSize))
+	runtime.SetFinalizer(factory, freeDecoderFactory)
 	return factory
 }
 
-// Destruct deallocatesthe memory consumed by a factory
+// freeDecoderFactory deallocatesthe memory consumed by a factory
 // @param factory The factory which should be deallocated
-func (factory *DecoderFactory) Destruct() {
+func freeDecoderFactory(factory *DecoderFactory) {
 	C.kodo_rlnc_decoder_factory_destruct(factory.mFactory)
 }
 
@@ -75,5 +79,6 @@ func (factory *DecoderFactory) SetSymbolSize(symbolSize uint32) {
 func (factory *DecoderFactory) Build() *Decoder {
 	decoder := new(Decoder)
 	decoder.mDecoder = C.kodo_rlnc_decoder_factory_build(factory.mFactory)
+	runtime.SetFinalizer(decoder, freeDecoder)
 	return decoder
 }

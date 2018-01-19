@@ -17,9 +17,9 @@ type Decoder struct {
 	mDecoder C.kodo_rlnc_decoder_t
 }
 
-// Destruct deallocates and release the memory consumed by an decoder
+// freeDecoder deallocates and release the memory consumed by an decoder
 // @param decoder The decoder which should be deallocated
-func (decoder *Decoder) Destruct() {
+func freeDecoder(decoder *Decoder) {
 	C.kodo_rlnc_decoder_destruct(decoder.mDecoder)
 }
 

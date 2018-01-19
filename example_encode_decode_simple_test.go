@@ -1,12 +1,18 @@
-package kodorlnc
+package kodorlnc_test
+
+// Copyright Steinwurf ApS 2018.
+// Distributed under the "STEINWURF RESEARCH LICENSE 1.0".
+// See accompanying file LICENSE.rst or
+// http://www.steinwurf.com/licensing
 
 import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/steinwurf/kodo-rlnc-go"
 )
 
-// Example_encodeDecodeSimple is a simple example of using kodorlnc
 func Example_encodeDecodeSimple() {
 	// Seed random number generator to produce different results every time
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -16,19 +22,11 @@ func Example_encodeDecodeSimple() {
 	var symbols, symbolSize uint32 = 10, 100
 
 	// Initialization of encoder and decoder
-	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
-	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
-
-	// These lines show the API to clean the memory used by the factories
-	defer encoderFactory.Destruct()
-	defer decoderFactory.Destruct()
+	encoderFactory := kodorlnc.NewEncoderFactory(kodorlnc.Binary8, symbols, symbolSize)
+	decoderFactory := kodorlnc.NewDecoderFactory(kodorlnc.Binary8, symbols, symbolSize)
 
 	encoder := encoderFactory.Build()
 	decoder := decoderFactory.Build()
-
-	// These lines show the API to clean the memory used by the coders
-	defer encoder.Destruct()
-	defer decoder.Destruct()
 
 	// Allocate some storage for a "payload" the payload is what we would
 	// eventually send over a network

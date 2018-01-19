@@ -3,6 +3,8 @@ kodo-rlnc-go
 
 Go bindings for `kodo-rlnc-c`_.
 
+.. _kodo-rlnc-c: https://github.com/steinwurf/kodo-rlnc-c
+
 Getting Started
 ---------------
 
@@ -62,87 +64,21 @@ And similarly it can be used as a dependency like so:
 When using kodo-rlnc-go as a dependency in your project, the
 Prerequisites has to be fulfilled before your project can be built.
 
-To check if your installation was success you can try to build the
-``encode_decode_example`` and run it like so:
+Running the tests
+-----------------
+
+To check if your installation was success you can try to run the tests like so:
 
 ::
 
-    $GOPATH/bin/encode_decode_example
+    Give an example
 
-.. Running the tests
-    -----------------
+License
+-------
 
-    Explain how to run the automated tests for this system
+To obtain a valid Kodo license **you must fill out the license request** form_.
 
-    Break down into end to end tests
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Kodo is available under a research- and education-friendly license, see the
+details in the LICENSE.rst file.
 
-    Explain what these tests test and why
-
-    ::
-
-        Give an example
-
-    And coding style tests
-    ~~~~~~~~~~~~~~~~~~~~~~
-
-    Explain what these tests test and why
-
-    ::
-
-        Give an example
-
-    Deployment
-    ----------
-
-    Add additional notes about how to deploy this on a live system
-
-    Built With
-    ----------
-
-    -  `Dropwizard`_ - The web framework used
-    -  `Maven`_ - Dependency Management
-    -  `ROME`_ - Used to generate RSS Feeds
-
-    Contributing
-    ------------
-
-    Please read `CONTRIBUTING.md`_ for details on our code of conduct, and
-    the process for submitting pull requests to us.
-
-    Versioning
-    ----------
-
-    We use `SemVer`_ for versioning. For the versions available, see the
-    `tags on this repository`_.
-
-    Authors
-    -------
-
-    -  **Billie Thompson** - *Initial work* - `PurpleBooth`_
-
-    See also the list of `contributors`_ who participated in this project.
-
-    License
-    -------
-
-    This project is licensed under the MIT License - see the `LICENSE.md`_
-    file for details
-
-    Acknowledgments
-    ---------------
-
-    -  Hat tip to anyone who’s code was used
-    -  Inspiration
-    -  etc
-
-.. _kodo-rlnc-c: https://github.com/steinwurf/kodo-rlnc-c
-.. _Dropwizard: http://www.dropwizard.io/1.0.2/docs/
-.. _Maven: https://maven.apache.org/
-.. _ROME: https://rometools.github.io/rome/
-.. _CONTRIBUTING.md: https://gist.github.com/PurpleBooth/b24679402957c63ec426
-.. _SemVer: http://semver.org/
-.. _tags on this repository: https://github.com/your/project/tags
-.. _PurpleBooth: https://github.com/PurpleBooth
-.. _contributors: https://github.com/your/project/contributors
-.. _LICENSE.md: LICENSE.md
+.. _form: http://steinwurf.com/license/
