@@ -69,7 +69,7 @@ To check if your installation was success you can try to build the
 
     $GOPATH/bin/encode_decode_example
 
-... Running the tests
+.. Running the tests
     -----------------
 
     Explain how to run the automated tests for this system
