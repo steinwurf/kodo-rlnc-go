@@ -1,14 +1,15 @@
-package main
+package kodorlnc
 
 import (
 	"fmt"
 	"math/rand"
 	"time"
 
-	"github.com/steinwurf/kodo-rlnc-go"
+	kodorlnc "github.com/steinwurf/kodo-rlnc-go"
 )
 
-func main() {
+// ExampleEncodeDecodeSimple is a simple example of using kodorlnc
+func ExampleEncodeDecodeSimple() {
 	// Seed random number generator to produce different results every time
 	rand.Seed(time.Now().UTC().UnixNano())
 
