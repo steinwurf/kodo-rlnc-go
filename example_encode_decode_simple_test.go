@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/steinwurf/kodo-rlnc-go"
+	. "github.com/steinwurf/kodo-rlnc-go"
 )
 
 func Example_encodeDecodeSimple() {
@@ -22,8 +22,8 @@ func Example_encodeDecodeSimple() {
 	var symbols, symbolSize uint32 = 10, 100
 
 	// Initialization of encoder and decoder
-	encoderFactory := kodorlnc.NewEncoderFactory(kodorlnc.Binary8, symbols, symbolSize)
-	decoderFactory := kodorlnc.NewDecoderFactory(kodorlnc.Binary8, symbols, symbolSize)
+	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
+	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
 
 	encoder := encoderFactory.Build()
 	decoder := decoderFactory.Build()
@@ -44,11 +44,11 @@ func Example_encodeDecodeSimple() {
 
 	// Assign the data buffer to the encoder so that we may start
 	// to produce encoded symbols from it
-	encoder.SetConstSymbols(&dataIn[0], symbols*symbolSize)
+	encoder.SetConstSymbols(&dataIn)
 
 	// Set the storage for the decoder
 	dataOut := make([]uint8, len(dataIn))
-	decoder.SetMutableSymbols(&dataOut[0], decoder.BlockSize())
+	decoder.SetMutableSymbols(&dataOut)
 
 	// Set systematic off
 	encoder.SetSystematicOff()
@@ -56,9 +56,9 @@ func Example_encodeDecodeSimple() {
 	for !decoder.IsComplete() {
 
 		// Encode the packet into the payload buffer
-		encoder.WritePayload(&payload[0])
+		encoder.WritePayload(&payload)
 		// Pass that packet to the decoder
-		decoder.ReadPayload(&payload[0])
+		decoder.ReadPayload(&payload)
 	}
 
 	// Check if we properly decoded the data

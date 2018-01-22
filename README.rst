@@ -3,7 +3,6 @@ kodo-rlnc-go
 
 Go bindings for `kodo-rlnc-c`_.
 
-.. _kodo-rlnc-c: https://github.com/steinwurf/kodo-rlnc-c
 
 Getting Started
 ---------------
@@ -14,38 +13,42 @@ as a dependency for your go projects.
 Prerequisites
 ~~~~~~~~~~~~~
 
-Since these bindings depends on a C library which is not available from
-a package, you need to build and make resulting binaries available
-before you can ``go get`` this library.
+This project depends on `kodo-rlnc-c`_, a C library which is not available as
+a package. For this reason you will need to build and install `kodo-rlnc-c`_
+before a successful executing of ``go get github.com/steinwurf/kodo-rlnc-go``
+can be performed.
 
-First checkout this git project:
+First checkout this git project.
+
 ::
 
     git clone https://github.com/steinwurf/kodo-rlnc-go
 
 
-Configure and build the project.
+Use Waf to configure and build. This will ensure the correct version of
+`kodo-rlnc-c`_ is used.
+
 ::
 
     cd kodo-rlnc-go
     python waf configure
     python waf build
 
-After a success compilation the products of the build needs to be made
-available to kodo-rlnc-go. This is accomplished with the following waf command.
-Make sure you have set your $GOPATH environment variable.
+After a successful configuration and compilation the products of the build needs
+to be made available. This is accomplished with the following Waf install
+command. Make sure you have set your $GOPATH environment variable.
+
 ::
 
-    python waf --install_static_libs --install_path $GOPATH/src/github.com/steinwurf/kodo-rlnc-c
+    python waf install --install_static_libs --install_path $GOPATH/src/github.com/steinwurf/kodo-rlnc-c
 
-``$GOPATH/src/github.com/steinwurf/kodo-rlnc-c`` is the path were kodo-rlnc-go,
-when fetched with ``go get``, expects the needed c library and header is
-located.
+``$GOPATH/src/github.com/steinwurf/kodo-rlnc-c`` is the path were kodo-rlnc-go
+expects the needed static library and header is located.
 
 Installing
 ~~~~~~~~~~
 
-After completing the steps specified in the Prerequisites section, installing
+After completing the steps specified in `Prerequisites`_, installing
 kodo-rlnc-go is as simple using the following ``go get`` command:
 
 ::
@@ -61,8 +64,8 @@ And similarly it can be used as a dependency like so:
         "github.com/steinwurf/kodo-rlnc-go"
     )
 
-When using kodo-rlnc-go as a dependency in your project, the
-Prerequisites has to be fulfilled before your project can be built.
+When using kodo-rlnc-go as a dependency in your project, the directions in
+`Prerequisites`_ needs to be followed before your project can be built.
 
 Running the tests
 -----------------
@@ -75,6 +78,7 @@ To check if your installation was success you can try to run the tests like so:
 
 License
 -------
+You will need a valid license to build `kodo-rlnc-c`_.
 
 To obtain a valid Kodo license **you must fill out the license request** form_.
 
@@ -82,3 +86,4 @@ Kodo is available under a research- and education-friendly license, see the
 details in the LICENSE.rst file.
 
 .. _form: http://steinwurf.com/license/
+.. _kodo-rlnc-c: https://github.com/steinwurf/kodo-rlnc-c

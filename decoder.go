@@ -37,8 +37,9 @@ func (decoder *Decoder) PayloadSize() uint32 {
 //        The payload buffer may be changed by this operation,
 //        so it cannot be reused. If the payload is needed at several places,
 //        make sure to keep a copy of the original payload.
-func (decoder *Decoder) ReadPayload(payload *uint8) {
-	C.kodo_rlnc_decoder_read_payload(decoder.mDecoder, (*C.uint8_t)(payload))
+func (decoder *Decoder) ReadPayload(payload *[]uint8) {
+	C.kodo_rlnc_decoder_read_payload(
+		decoder.mDecoder, (*C.uint8_t)(&(*payload)[0]))
 }
 
 // BlockSize returns the block size of an decoder.
@@ -69,9 +70,9 @@ func (decoder *Decoder) Symbols() uint32 {
 // @param decoder The decoder which will decode the data
 // @param data The buffer that should contain the decoded symbols
 // @param size The size of the buffer to be decoded
-func (decoder *Decoder) SetMutableSymbols(data *uint8, size uint32) {
+func (decoder *Decoder) SetMutableSymbols(data *[]uint8) {
 	C.kodo_rlnc_decoder_set_mutable_symbols(
-		decoder.mDecoder, (*C.uint8_t)(data), C.uint32_t(size))
+		decoder.mDecoder, (*C.uint8_t)(&(*data)[0]), C.uint32_t(len(*data)))
 }
 
 // IsComplete checks whether decoding is complete.

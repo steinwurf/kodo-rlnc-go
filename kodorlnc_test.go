@@ -31,6 +31,19 @@ func (s *MySuite) TestDecoderFactory(c *C) {
 	c.Assert(newSymbolSize, Equals, decoderFactory.SymbolSize())
 }
 
+func (s *MySuite) TestDecoder(c *C) {
+	var symbols uint32 = 50
+	var symbolSize uint32 = 750
+	decoderFactory := NewDecoderFactory(Binary4, symbols, symbolSize)
+	decoder := decoderFactory.Build()
+	c.Assert(symbols, Equals, decoder.Symbols())
+	c.Assert(symbolSize, Equals, decoder.SymbolSize())
+	c.Assert(decoder.IsComplete(), Equals, false)
+	c.Assert(decoder.Rank(), Equals, uint32(0))
+	c.Assert(symbols*symbolSize, Equals, decoder.BlockSize())
+	c.Assert((symbols*symbolSize) <= decoder.BlockSize(), Equals, true)
+}
+
 func (s *MySuite) TestEncoderFactory(c *C) {
 	var symbols uint32 = 50
 	var symbolSize uint32 = 750

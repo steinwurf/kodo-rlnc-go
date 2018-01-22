@@ -35,9 +35,9 @@ func (encoder *Encoder) PayloadSize() uint32 {
 // @param encoder The encoder to use.
 // @param payload The buffer which should contain the symbol.
 // @return The total bytes used from the payload buffer
-func (encoder *Encoder) WritePayload(payload *uint8) uint32 {
+func (encoder *Encoder) WritePayload(payload *[]uint8) uint32 {
 	return uint32(C.kodo_rlnc_encoder_write_payload(
-		encoder.mEncoder, (*C.uint8_t)(payload)))
+		encoder.mEncoder, (*C.uint8_t)(&(*payload)[0])))
 }
 
 // BlockSize returns the block size of an encoder.
@@ -67,9 +67,9 @@ func (encoder *Encoder) Symbols() uint32 {
 // @param encoder The encoder which will encode the data
 // @param data The buffer containing the data to be encoded
 // @param size The size of the buffer to be encoded
-func (encoder *Encoder) SetConstSymbols(data *uint8, size uint32) {
+func (encoder *Encoder) SetConstSymbols(data *[]uint8) {
 	C.kodo_rlnc_encoder_set_const_symbols(
-		encoder.mEncoder, (*C.uint8_t)(data), C.uint32_t(size))
+		encoder.mEncoder, (*C.uint8_t)(&(*data)[0]), C.uint32_t(len(*data)))
 }
 
 // IsSystematicOn returns whether the encoder is in the systematic mode, i.e.
