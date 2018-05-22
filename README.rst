@@ -67,14 +67,22 @@ And similarly it can be used as a dependency like so:
 When using kodo-rlnc-go as a dependency in your project, the directions in
 `Prerequisites`_ needs to be followed before your project can be built.
 
+Development
+-----------
+
+If you want to extend the bindings with new features or fix an issue,
+follow the steps specified in Prerequisites and Installing.
+When you have completed these steps you can and make, test and commit your
+changes from the ``$GOPATH/src/github.com/steinwurf/kodo-rlnc-go`` directory.
+
 Running the tests
 -----------------
 
-To check if your installation was success you can try to run the tests like so:
+To check if your installation was successful you can try to run the tests like so:
 
 ::
-
-    Give an example
+    cd $GOPATH/src/github.com/steinwurf/kodo-rlnc-go
+    go test
 
 License
 -------
