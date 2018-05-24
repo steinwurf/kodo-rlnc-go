@@ -17,7 +17,7 @@ import (
 
 // EncoderFactory builds Encoders
 type EncoderFactory struct {
-	mFactory C.kodo_rlnc_encoder_factory_t
+	mFactory *C.krlnc_encoder_factory_t
 }
 
 // NewEncoderFactory builds a new encoder factory
@@ -31,38 +31,38 @@ type EncoderFactory struct {
 func NewEncoderFactory(
 	finiteField int32, symbols uint32, symbolSize uint32) *EncoderFactory {
 	factory := new(EncoderFactory)
-	factory.mFactory = C.kodo_rlnc_encoder_factory_construct(
+	factory.mFactory = C.krlnc_new_encoder_factory(
 		C.int32_t(finiteField), C.uint32_t(symbols), C.uint32_t(symbolSize))
 
-	runtime.SetFinalizer(factory, freeEncoderFactory)
+	runtime.SetFinalizer(factory, deleteEncoderFactory)
 	return factory
 }
 
-// destruct deallocates the memory consumed by a factory
+// deleteEncoderFactory deallocates the memory consumed by a factory
 // @param factory The factory which should be deallocated
-func freeEncoderFactory(factory *EncoderFactory) {
-	C.kodo_rlnc_encoder_factory_destruct(factory.mFactory)
+func deleteEncoderFactory(factory *EncoderFactory) {
+	C.krlnc_delete_encoder_factory(factory.mFactory)
 }
 
 // Symbols returns the number of symbols in a block
 // @param factory The factory to query
 // @return the number of symbols in a block
 func (factory *EncoderFactory) Symbols() uint32 {
-	return uint32(C.kodo_rlnc_encoder_factory_symbols(factory.mFactory))
+	return uint32(C.krlnc_encoder_factory_symbols(factory.mFactory))
 }
 
 // SymbolSize returns the symbol size in bytes
 // @param factory The factory to query
 // @return the symbol size in bytes
 func (factory *EncoderFactory) SymbolSize() uint32 {
-	return uint32(C.kodo_rlnc_encoder_factory_symbol_size(factory.mFactory))
+	return uint32(C.krlnc_encoder_factory_symbol_size(factory.mFactory))
 }
 
 // SetSymbols sets the number of symbols
 // @param factory The factory which should be configured
 // @param symbols the number of symbols
 func (factory *EncoderFactory) SetSymbols(symbols uint32) {
-	C.kodo_rlnc_encoder_factory_set_symbols(
+	C.krlnc_encoder_factory_set_symbols(
 		factory.mFactory, C.uint32_t(symbols))
 }
 
@@ -70,7 +70,7 @@ func (factory *EncoderFactory) SetSymbols(symbols uint32) {
 // @param factory The factory which should be configured
 // @param the symbol size in bytes
 func (factory *EncoderFactory) SetSymbolSize(symbolSize uint32) {
-	C.kodo_rlnc_encoder_factory_set_symbol_size(
+	C.krlnc_encoder_factory_set_symbol_size(
 		factory.mFactory, C.uint32_t(symbolSize))
 }
 
@@ -79,7 +79,7 @@ func (factory *EncoderFactory) SetSymbolSize(symbolSize uint32) {
 // @return pointer to an instantiation of an encoder
 func (factory *EncoderFactory) Build() *Encoder {
 	encoder := new(Encoder)
-	encoder.mEncoder = C.kodo_rlnc_encoder_factory_build(factory.mFactory)
-	runtime.SetFinalizer(encoder, freeEncoder)
+	encoder.mEncoder = C.krlnc_encoder_factory_build(factory.mFactory)
+	runtime.SetFinalizer(encoder, deleteEncoder)
 	return encoder
 }

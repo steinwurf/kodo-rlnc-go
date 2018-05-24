@@ -13,7 +13,8 @@ import "C"
 
 /// Enum specifying the available finite fields
 const (
-	Binary  = C.kodo_rlnc_binary
-	Binary4 = C.kodo_rlnc_binary4
-	Binary8 = C.kodo_rlnc_binary8
+	Binary   = C.krlnc_binary
+	Binary4  = C.krlnc_binary4
+	Binary8  = C.krlnc_binary8
+	Binary16 = C.krlnc_binary16
 )

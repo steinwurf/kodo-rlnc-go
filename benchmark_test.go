@@ -16,9 +16,10 @@ func Benchmark(b *testing.B) {
 	symbols := uint32(25)
 	symbolSize := uint32(1600)
 	fields := map[string]int32{
-		"Binary":  Binary,
-		"Binary4": Binary4,
-		"Binary8": Binary8,
+		"Binary":   Binary,
+		"Binary4":  Binary4,
+		"Binary8":  Binary8,
+		"Binary16": Binary16,
 	}
 
 	for name, field := range fields {

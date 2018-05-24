@@ -17,7 +17,7 @@ import (
 
 // DecoderFactory builds Decoders
 type DecoderFactory struct {
-	mFactory C.kodo_rlnc_decoder_factory_t
+	mFactory *C.krlnc_decoder_factory_t
 }
 
 // NewDecoderFactory builds a new decoder factory
@@ -31,37 +31,37 @@ type DecoderFactory struct {
 func NewDecoderFactory(
 	finiteField int32, symbols uint32, symbolSize uint32) *DecoderFactory {
 	factory := new(DecoderFactory)
-	factory.mFactory = C.kodo_rlnc_decoder_factory_construct(
+	factory.mFactory = C.krlnc_new_decoder_factory(
 		C.int32_t(finiteField), C.uint32_t(symbols), C.uint32_t(symbolSize))
-	runtime.SetFinalizer(factory, freeDecoderFactory)
+	runtime.SetFinalizer(factory, deleteDecoderFactory)
 	return factory
 }
 
-// freeDecoderFactory deallocatesthe memory consumed by a factory
+// deleteDecoderFactory deallocatesthe memory consumed by a factory
 // @param factory The factory which should be deallocated
-func freeDecoderFactory(factory *DecoderFactory) {
-	C.kodo_rlnc_decoder_factory_destruct(factory.mFactory)
+func deleteDecoderFactory(factory *DecoderFactory) {
+	C.krlnc_delete_decoder_factory(factory.mFactory)
 }
 
 // Symbols returns the number of symbols in a block
 // @param factory The factory to query
 // @return the number of symbols in a block
 func (factory *DecoderFactory) Symbols() uint32 {
-	return uint32(C.kodo_rlnc_decoder_factory_symbols(factory.mFactory))
+	return uint32(C.krlnc_decoder_factory_symbols(factory.mFactory))
 }
 
 // SymbolSize returns the symbol size in bytes
 // @param factory The factory to query
 // @return the symbol size in bytes
 func (factory *DecoderFactory) SymbolSize() uint32 {
-	return uint32(C.kodo_rlnc_decoder_factory_symbol_size(factory.mFactory))
+	return uint32(C.krlnc_decoder_factory_symbol_size(factory.mFactory))
 }
 
 // SetSymbols sets the number of symbols
 // @param factory The factory which should be configured
 // @param symbols the number of symbols
 func (factory *DecoderFactory) SetSymbols(symbols uint32) {
-	C.kodo_rlnc_decoder_factory_set_symbols(
+	C.krlnc_decoder_factory_set_symbols(
 		factory.mFactory, C.uint32_t(symbols))
 }
 
@@ -69,7 +69,7 @@ func (factory *DecoderFactory) SetSymbols(symbols uint32) {
 // @param factory The factory which should be configured
 // @param the symbol size in bytes
 func (factory *DecoderFactory) SetSymbolSize(symbolSize uint32) {
-	C.kodo_rlnc_decoder_factory_set_symbol_size(
+	C.krlnc_decoder_factory_set_symbol_size(
 		factory.mFactory, C.uint32_t(symbolSize))
 }
 
@@ -78,7 +78,7 @@ func (factory *DecoderFactory) SetSymbolSize(symbolSize uint32) {
 // @return pointer to an instantiation of an decoder
 func (factory *DecoderFactory) Build() *Decoder {
 	decoder := new(Decoder)
-	decoder.mDecoder = C.kodo_rlnc_decoder_factory_build(factory.mFactory)
-	runtime.SetFinalizer(decoder, freeDecoder)
+	decoder.mDecoder = C.krlnc_decoder_factory_build(factory.mFactory)
+	runtime.SetFinalizer(decoder, deleteDecoder)
 	return decoder
 }
