@@ -6,6 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
+* Minor: Update waf.
 * Major: Renamed ``free*`` methods to ``delete*`` methods.
 * Minor: Enabled binary16 field.
 * Major: Use kodo-rlnc-c version 2.
