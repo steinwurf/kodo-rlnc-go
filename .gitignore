@@ -24,6 +24,7 @@ waf3-*
 .waf3-*
 .lock-*
 build
+build_current
 resolve_symlinks
 resolved_dependencies
 *.sh
@@ -64,5 +65,6 @@ VSProjects
 figures_database
 figures_database_detailed
 figures_local
+
 # Visual Studio Code
 .vscode
