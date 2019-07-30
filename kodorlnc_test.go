@@ -18,6 +18,7 @@ func (s *MySuite) TestDecoderFactory(c *C) {
 	var symbols uint32 = 50
 	var symbolSize uint32 = 750
 	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
+	decoderFactory.SetCodingVectorFormat(FullVector)
 
 	c.Assert(symbols, Equals, decoderFactory.Symbols())
 	c.Assert(symbolSize, Equals, decoderFactory.SymbolSize())
@@ -41,13 +42,15 @@ func (s *MySuite) TestDecoder(c *C) {
 	c.Assert(false, Equals, decoder.IsComplete())
 	c.Assert(uint32(0), Equals, decoder.Rank())
 	c.Assert(symbols*symbolSize, Equals, decoder.BlockSize())
-	c.Assert(symbolSize+uint32(34), Equals, decoder.PayloadSize())
+
+	c.Assert(int(symbolSize+28), Equals, int(decoder.PayloadSize()))
 }
 
 func (s *MySuite) TestEncoderFactory(c *C) {
 	var symbols uint32 = 50
 	var symbolSize uint32 = 750
 	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
+	encoderFactory.SetCodingVectorFormat(FullVector)
 
 	c.Assert(symbols, Equals, encoderFactory.Symbols())
 	c.Assert(symbolSize, Equals, encoderFactory.SymbolSize())
@@ -70,7 +73,7 @@ func (s *MySuite) TestEncoder(c *C) {
 	c.Assert(symbols, Equals, encoder.Symbols())
 	c.Assert(symbolSize, Equals, encoder.SymbolSize())
 	c.Assert(symbols*symbolSize, Equals, encoder.BlockSize())
-	c.Assert(symbolSize+uint32(34), Equals, encoder.PayloadSize())
+	c.Assert(int(symbolSize+7), Equals, int(encoder.PayloadSize()))
 
 	c.Assert(true, Equals, encoder.IsSystematicOn())
 	encoder.SetSystematicOff()

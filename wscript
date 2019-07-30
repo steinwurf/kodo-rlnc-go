@@ -20,8 +20,12 @@ def build(bld):
 
     # Substitute environment variables
     install_path = string.Template(install_path).substitute(os.environ)
-    kodo_rlnc_c = bld.dependency_path('kodo-rlnc-c')
-    kodo_rlnc_c_h = bld.root.find_node(os.path.realpath(os.path.join(
-        kodo_rlnc_c, 'src', 'kodo_rlnc_c', 'kodo_rlnc_c.h')))
+    kodo_rlnc_c = os.path.realpath(bld.dependency_path('kodo-rlnc-c'))
 
-    bld.install_files(install_path, [kodo_rlnc_c_h])
+    headers = ['encoder.h', 'decoder.h', 'common.h']
+    install_files = []
+    for header in headers:
+        path = os.path.join(kodo_rlnc_c, 'src', 'kodo_rlnc_c', header)
+        install_files.append(bld.root.find_node(path))
+
+    bld.install_files(install_path, install_files)

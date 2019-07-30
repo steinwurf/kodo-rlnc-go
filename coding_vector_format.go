@@ -11,10 +11,9 @@ package kodorlnc
 */
 import "C"
 
-/// Enum specifying the available finite fields
+/// Enum specifying the available coding vector formats fields
 const (
-	Binary   = C.krlnc_binary
-	Binary4  = C.krlnc_binary4
-	Binary8  = C.krlnc_binary8
-	Binary16 = C.krlnc_binary16
+	FullVector = C.krlnc_full_vector
+	Seed       = C.krlnc_seed
+	SparseSeed = C.krlnc_sparse_seed
 )

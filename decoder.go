@@ -8,13 +8,13 @@ package kodorlnc
 /*
 #cgo CFLAGS: -I../kodo-rlnc-c
 #cgo LDFLAGS: -L../kodo-rlnc-c -lkodo_rlnc_c_static -lkodo_rlnc -lfifi -lcpuid
-#include <kodo_rlnc_c.h>
+#include <decoder.h>
 */
 import "C"
 
 // Decoder is used for encoding data
 type Decoder struct {
-	mDecoder *C.krlnc_decoder_t
+	mDecoder C.krlnc_decoder_t
 }
 
 // deleteDecoder deallocates and release the memory consumed by an decoder
@@ -40,6 +40,15 @@ func (decoder *Decoder) PayloadSize() uint32 {
 func (decoder *Decoder) ReadPayload(payload *[]uint8) {
 	C.krlnc_decoder_read_payload(
 		decoder.mDecoder, (*C.uint8_t)(&(*payload)[0]))
+}
+
+// WritePayload write a recoded symbol into the provided payload buffer.
+// @param decoder The decoder to use.
+// @param payload The buffer which should contain the recoded symbol.
+// @return The total bytes used from the payload buffer
+func (decoder *Decoder) WritePayload(payload *[]uint8) uint32 {
+	return uint32(C.krlnc_decoder_write_payload(
+		decoder.mDecoder, (*C.uint8_t)(&(*payload)[0])))
 }
 
 // BlockSize returns the block size of an decoder.
