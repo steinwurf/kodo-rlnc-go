@@ -8,7 +8,7 @@ package kodorlnc
 /*
 #cgo CFLAGS: -I../kodo-rlnc-c
 #cgo LDFLAGS: -L../kodo-rlnc-c -lkodo_rlnc_c_static -lkodo_rlnc -lfifi -lcpuid
-#include <kodo_rlnc_c.h>
+#include <encoder.h>
 */
 import "C"
 import (
@@ -17,7 +17,7 @@ import (
 
 // EncoderFactory builds Encoders
 type EncoderFactory struct {
-	mFactory *C.krlnc_encoder_factory_t
+	mFactory C.krlnc_encoder_factory_t
 }
 
 // NewEncoderFactory builds a new encoder factory
@@ -72,6 +72,14 @@ func (factory *EncoderFactory) SetSymbols(symbols uint32) {
 func (factory *EncoderFactory) SetSymbolSize(symbolSize uint32) {
 	C.krlnc_encoder_factory_set_symbol_size(
 		factory.mFactory, C.uint32_t(symbolSize))
+}
+
+// SetCodingVectorFormat sets the coding vector format
+// @param factory The factory which should be configured
+// @param formatID The selected coding vector format
+func (factory *EncoderFactory) SetCodingVectorFormat(formatID int32) {
+	C.krlnc_encoder_factory_set_coding_vector_format(
+		factory.mFactory, C.int32_t(formatID))
 }
 
 // Build builds the actual encoder

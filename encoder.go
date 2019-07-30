@@ -8,13 +8,13 @@ package kodorlnc
 /*
 #cgo CFLAGS: -I../kodo-rlnc-c
 #cgo LDFLAGS: -L../kodo-rlnc-c -lkodo_rlnc_c_static -lkodo_rlnc -lfifi -lcpuid
-#include <kodo_rlnc_c.h>
+#include <encoder.h>
 */
 import "C"
 
 // Encoder is used for encoding data
 type Encoder struct {
-	mEncoder *C.krlnc_encoder_t
+	mEncoder C.krlnc_encoder_t
 }
 
 // deleteEncoder deallocates and release the memory consumed by an encoder
@@ -77,13 +77,13 @@ func (encoder *Encoder) SetConstSymbols(data *[]uint8) {
 // @param encoder The encoder
 // @return Non-zero if the encoder is in the systematic mode, otherwise 0
 func (encoder *Encoder) IsSystematicOn() bool {
-	return C.krlnc_is_systematic_on(encoder.mEncoder) != 0
+	return C.krlnc_encoder_is_systematic_on(encoder.mEncoder) != 0
 }
 
 // SetSystematicOn switches the systematic encoding on
 // @param encoder The encoder
 func (encoder *Encoder) SetSystematicOn() {
-	C.krlnc_set_systematic_on(encoder.mEncoder)
+	C.krlnc_encoder_set_systematic_on(encoder.mEncoder)
 }
 
 // SetSystematicOff switches the systematic encoding off

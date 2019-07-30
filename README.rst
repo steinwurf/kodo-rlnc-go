@@ -34,8 +34,8 @@ Use Waf to configure and build. This will ensure the correct version of
     python waf configure
     python waf build
 
-After a successful configuration and compilation the products of the build needs
-to be made available. This is accomplished with the following Waf install
+After a successful configuration and compilation the products of the build
+needs to be made available. This is accomplished with the following Waf install
 command. Make sure you have set your $GOPATH environment variable.
 
 ::
@@ -78,7 +78,8 @@ changes from the ``$GOPATH/src/github.com/steinwurf/kodo-rlnc-go`` directory.
 Running the tests
 -----------------
 
-To check if your installation was successful you can try to run the tests like so:
+To check if your installation was successful you can try to run the tests like
+so:
 
 ::
     cd $GOPATH/src/github.com/steinwurf/kodo-rlnc-go
