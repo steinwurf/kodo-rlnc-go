@@ -22,15 +22,12 @@ func Example_encodeDecodeSimple() {
 	var symbols, symbolSize uint32 = 10, 100
 
 	// Initialization of encoder and decoder
-	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
-	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
-
-	encoder := encoderFactory.Build()
-	decoder := decoderFactory.Build()
+	encoder := NewEncoder(Binary8, symbols, symbolSize)
+	decoder := NewDecoder(Binary8, symbols, symbolSize)
 
 	// Allocate some storage for a "payload" the payload is what we would
 	// eventually send over a network
-	payload := make([]uint8, encoder.PayloadSize())
+	payload := make([]uint8, encoder.MaxPayloadSize())
 
 	// Allocate some data to encode. In this case we make a buffer
 	// with the same size as the encoder's block size (the max.
@@ -44,11 +41,11 @@ func Example_encodeDecodeSimple() {
 
 	// Assign the data buffer to the encoder so that we may start
 	// to produce encoded symbols from it
-	encoder.SetConstSymbols(&dataIn)
+	encoder.SetSymbolsStorage(&dataIn)
 
 	// Set the storage for the decoder
 	dataOut := make([]uint8, len(dataIn))
-	decoder.SetMutableSymbols(&dataOut)
+	decoder.SetSymbolsStorage(&dataOut)
 
 	// Set systematic off
 	encoder.SetSystematicOff()
@@ -56,9 +53,9 @@ func Example_encodeDecodeSimple() {
 	for !decoder.IsComplete() {
 
 		// Encode the packet into the payload buffer
-		encoder.WritePayload(&payload)
+		encoder.ProducePayload(&payload)
 		// Pass that packet to the decoder
-		decoder.ReadPayload(&payload)
+		decoder.ConsumePayload(&payload)
 	}
 
 	// Check if we properly decoded the data

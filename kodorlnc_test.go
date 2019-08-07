@@ -14,70 +14,72 @@ type MySuite struct{}
 
 var _ = Suite(&MySuite{})
 
-func (s *MySuite) TestDecoderFactory(c *C) {
-	var symbols uint32 = 50
-	var symbolSize uint32 = 750
-	decoderFactory := NewDecoderFactory(Binary8, symbols, symbolSize)
-	decoderFactory.SetCodingVectorFormat(FullVector)
-
-	c.Assert(symbols, Equals, decoderFactory.Symbols())
-	c.Assert(symbolSize, Equals, decoderFactory.SymbolSize())
-
-	var newSymbols uint32 = 25
-	decoderFactory.SetSymbols(newSymbols)
-	c.Assert(newSymbols, Equals, decoderFactory.Symbols())
-
-	var newSymbolSize uint32 = 300
-	decoderFactory.SetSymbolSize(newSymbolSize)
-	c.Assert(newSymbolSize, Equals, decoderFactory.SymbolSize())
-}
-
 func (s *MySuite) TestDecoder(c *C) {
 	var symbols uint32 = 50
 	var symbolSize uint32 = 750
-	decoderFactory := NewDecoderFactory(Binary4, symbols, symbolSize)
-	decoder := decoderFactory.Build()
+	decoder := NewDecoder(Binary8, symbols, symbolSize)
+
 	c.Assert(symbols, Equals, decoder.Symbols())
 	c.Assert(symbolSize, Equals, decoder.SymbolSize())
+	c.Assert(symbolSize*symbols, Equals, decoder.BlockSize())
+	c.Assert(int(symbolSize+53), Equals, int(decoder.MaxPayloadSize()))
 	c.Assert(false, Equals, decoder.IsComplete())
+	c.Assert(false, Equals, decoder.IsPartiallyComplete())
 	c.Assert(uint32(0), Equals, decoder.Rank())
-	c.Assert(symbols*symbolSize, Equals, decoder.BlockSize())
+	c.Assert(uint32(0), Equals, decoder.SymbolsDecoded())
 
-	c.Assert(int(symbolSize+28), Equals, int(decoder.PayloadSize()))
-}
+	c.Assert(true, Equals, decoder.IsSymbolMissing(0))
+	c.Assert(false, Equals, decoder.IsSymbolPartiallyDecoded(0))
+	c.Assert(false, Equals, decoder.IsSymbolDecoded(0))
+	c.Assert(false, Equals, decoder.IsSymbolPivot(0))
 
-func (s *MySuite) TestEncoderFactory(c *C) {
-	var symbols uint32 = 50
-	var symbolSize uint32 = 750
-	encoderFactory := NewEncoderFactory(Binary8, symbols, symbolSize)
-	encoderFactory.SetCodingVectorFormat(FullVector)
+	c.Assert(false, Equals, decoder.IsStatusUpdaterEnabled())
+	decoder.SetStatusUpdaterOn()
+	c.Assert(true, Equals, decoder.IsStatusUpdaterEnabled())
+	decoder.SetStatusUpdaterOff()
+	c.Assert(false, Equals, decoder.IsStatusUpdaterEnabled())
+	decoder.UpdateSymbolStatus()
 
-	c.Assert(symbols, Equals, encoderFactory.Symbols())
-	c.Assert(symbolSize, Equals, encoderFactory.SymbolSize())
+	c.Assert(50, Equals, int(decoder.CoefficientVectorSize()))
 
-	var newSymbols uint32 = 25
-	encoderFactory.SetSymbols(newSymbols)
+	decoder.SetLogStdout()
+	decoder.SetLogOff()
 
-	c.Assert(newSymbols, Equals, encoderFactory.Symbols())
+	decoder.Reset()
 
-	var newSymbolSize uint32 = 300
-	encoderFactory.SetSymbolSize(newSymbolSize)
-	c.Assert(newSymbolSize, Equals, encoderFactory.SymbolSize())
+	c.Assert(symbols, Equals, decoder.Symbols())
+	c.Assert(symbolSize, Equals, decoder.SymbolSize())
 }
 
 func (s *MySuite) TestEncoder(c *C) {
 	var symbols uint32 = 50
 	var symbolSize uint32 = 750
-	encoderFactory := NewEncoderFactory(Binary4, symbols, symbolSize)
-	encoder := encoderFactory.Build()
+	encoder := NewEncoder(Binary4, symbols, symbolSize)
+	encoder.SetCodingVectorFormat(FullVector)
 	c.Assert(symbols, Equals, encoder.Symbols())
 	c.Assert(symbolSize, Equals, encoder.SymbolSize())
 	c.Assert(symbols*symbolSize, Equals, encoder.BlockSize())
-	c.Assert(int(symbolSize+7), Equals, int(encoder.PayloadSize()))
+	c.Assert(int(symbolSize+28), Equals, int(encoder.MaxPayloadSize()))
+	c.Assert(int(0), Equals, int(encoder.Rank()))
 
+	c.Assert(false, Equals, encoder.InSystematicPhase())
 	c.Assert(true, Equals, encoder.IsSystematicOn())
 	encoder.SetSystematicOff()
 	c.Assert(false, Equals, encoder.IsSystematicOn())
 	encoder.SetSystematicOn()
 	c.Assert(true, Equals, encoder.IsSystematicOn())
+
+	c.Assert(25, Equals, int(encoder.CoefficientVectorSize()))
+
+	c.Assert(float32(0.9375), Equals, encoder.Density())
+	encoder.SetDensity(0.4)
+	c.Assert(float32(0.4), Equals, encoder.Density())
+
+	encoder.SetLogStdout()
+	encoder.SetLogOff()
+
+	encoder.Reset()
+
+	c.Assert(symbols, Equals, encoder.Symbols())
+	c.Assert(symbolSize, Equals, encoder.SymbolSize())
 }
