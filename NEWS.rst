@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.0.0
+-----
 * Major: Use kodo-rlnc-c version 4.
 * Minor: Update waf.
 * Major: Renamed ``free*`` methods to ``delete*`` methods.
