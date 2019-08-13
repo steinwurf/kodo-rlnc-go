@@ -7,7 +7,7 @@ from waflib import Utils
 from waflib.TaskGen import feature, after_method
 
 APPNAME = 'kodo-rlnc-go'
-VERSION = '1.0.0'
+VERSION = '2.0.0'
 
 
 def build(bld):
