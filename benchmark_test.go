@@ -23,12 +23,12 @@ func Benchmark(b *testing.B) {
 	}
 
 	for name, field := range fields {
-		encoderFactory := NewEncoderFactory(field, symbols, symbolSize)
+		encoder := NewEncoder(field, symbols, symbolSize)
 
 		// Allocate some data to encode. In this case we make a buffer
 		// with the same size as the encoder's block size (the max.
 		// amount a single encoder can encode)
-		blockSize := encoderFactory.Symbols() * encoderFactory.SymbolSize()
+		blockSize := encoder.Symbols() * encoder.SymbolSize()
 		dataIn := make([]uint8, blockSize)
 
 		// Just for fun - fill the data with random data
@@ -37,11 +37,11 @@ func Benchmark(b *testing.B) {
 		}
 
 		var payloads [][]uint8
-		b.Run(name+"Encode", func(b *testing.B) { payloads = encodeData(b, encoderFactory, &dataIn) })
+		b.Run(name+"Encode", func(b *testing.B) { payloads = encodeData(b, encoder, &dataIn) })
 
 		dataOut := make([]uint8, len(dataIn))
-		decoderFactory := NewDecoderFactory(field, symbols, symbolSize)
-		b.Run(name+"Decode", func(b *testing.B) { decodeData(b, decoderFactory, &dataOut, &payloads) })
+		decoder := NewDecoder(field, symbols, symbolSize)
+		b.Run(name+"Decode", func(b *testing.B) { decodeData(b, decoder, &dataOut, &payloads) })
 
 		var success bool = true
 		// Check if we properly decoded the data
@@ -62,23 +62,22 @@ func Benchmark(b *testing.B) {
 }
 
 func encodeData(
-	b *testing.B, encoderFactory *EncoderFactory, dataIn *[]uint8) [][]uint8 {
+	b *testing.B, encoder *Encoder, dataIn *[]uint8) [][]uint8 {
 
-	var encoder *Encoder
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		encoder = encoderFactory.Build()
+		encoder.Reset()
 
-		benchpayload := make([]uint8, encoder.PayloadSize())
+		benchpayload := make([]uint8, encoder.MaxPayloadSize())
 
 		// We measure pure coding, so we always turn off the systematic mode
 		encoder.SetSystematicOff()
 
 		// Copy the input data to the encoder
-		encoder.SetConstSymbols(dataIn)
+		encoder.SetSymbolsStorage(dataIn)
 
 		for i := 0; i < int(encoder.Symbols())*2; i++ {
-			encoder.WritePayload(&benchpayload)
+			encoder.ProducePayload(&benchpayload)
 		}
 	}
 
@@ -88,10 +87,10 @@ func encodeData(
 	// The generated payloads will be stored for the decoder
 	payloads := make([][]uint8, payloadCount)
 	for i := range payloads {
-		payloads[i] = make([]uint8, encoder.PayloadSize())
+		payloads[i] = make([]uint8, encoder.MaxPayloadSize())
 	}
 	for i := 0; i < len(payloads); i++ {
-		encoder.WritePayload(&payloads[i])
+		encoder.ProducePayload(&payloads[i])
 	}
 
 	return payloads
@@ -99,7 +98,7 @@ func encodeData(
 
 func decodeData(
 	b *testing.B,
-	decoderFactory *DecoderFactory,
+	decoder *Decoder,
 	dataOut *[]uint8,
 	payloads *[][]uint8) {
 
@@ -108,16 +107,15 @@ func decodeData(
 			if decoder.IsComplete() {
 				break
 			}
-			decoder.ReadPayload(&payload)
+			decoder.ConsumePayload(&payload)
 		}
 	}
 
-	var decoder *Decoder
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		decoder = decoderFactory.Build()
+		decoder.Reset()
 		// Set the storage for the decoder
-		decoder.SetMutableSymbols(dataOut)
+		decoder.SetSymbolsStorage(dataOut)
 		f(decoder, *payloads)
 	}
 }
